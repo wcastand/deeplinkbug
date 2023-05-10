@@ -1,15 +1,41 @@
-# Expo Router Example
+## Bug deeplink
 
-Use [`expo-router`](https://expo.github.io/router) to build native navigation using files in the `app/` directory.
 
-## 🚀 How to use
+when coming from a deeplink, the hook like `useSegments` or `usePathname` don't have the right value.
 
-```sh
-npx create-react-native-app -t with-router
+
+if you do something like `npx uri-scheme open "exp://192.168.1.9:19000/--/home" --ios`
+
+it will render the right screen (`home`) but the hook will return 
+
+```
+ LOG  /undefined ["[...404]"]
 ```
 
-## 📝 Notes
 
-- [Expo Router: Docs](https://expo.github.io/router)
-- [Expo Router: Repo](https://github.com/expo/router)
-- [Request for Comments](https://github.com/expo/router/discussions/1)
+I don't know if expo go is using deeplink by default to open the app because it also happens on reload in this example.
+
+The app i'm working on only has the wrong pathname on deeplink (using expo-dev)
+
+In my app the first render from the deeplink has the right screen( the one requested in deeplink) but the hook return `/` for pathname and `[]` for segments.
+
+
+
+# Bug received / expected
+
+- deeplink to the app 
+
+```
+npx uri-scheme open "exp://192.168.1.9:19000/--/home" --ios
+```
+
+received: 
+```
+ LOG  /undefined ["[...404]"]
+```
+
+expected:
+```
+ LOG  /home ["home"]
+```
+
